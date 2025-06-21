@@ -50,7 +50,7 @@ SnapSecure is built using modern web technologies and follows a client-server ar
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/snapsecure.git
+git clone https://github.com/RahulRKS01/SnapSecure2.0.git
 cd snapsecure
 ```
 
@@ -93,7 +93,7 @@ flask run
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/snapsecure.git
+git clone https://github.com/RahulRKS01/SnapSecure2.0.git
 cd snapsecure
 ```
 
@@ -101,6 +101,8 @@ cd snapsecure
 
 3. Build and run with Docker Compose:
 ```bash
+docker-compose build
+
 docker-compose up -d
 ```
 
