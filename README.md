@@ -114,46 +114,301 @@ docker-compose up -d
 
 The application will be available at http://localhost:5000
 
-## Usage Guide
+## Detailed Usage Guide
 
-### Setting Up Your Account
+### Creating and Setting Up Your Account
 
-1. Register with your email and create a password
-2. Log in to access the dashboard
+#### Registration:
+- Navigate to the registration page from the home screen
+- Enter your email address, create a strong password, and confirm your password
+- Submit the form to create your account
+- Check your email for a verification link (if enabled)
 
-### Configuring Video Source
+#### Login:
+- Enter your registered email and password
+- Enable "Remember Me" for persistent login (optional)
+- Use the "Forgot Password" link if needed
 
-1. Navigate to Settings
-2. Choose your preferred video source:
-   - Webcam (select from available cameras)
-   - IP Camera (enter the camera's URL)
-   - Upload a video file (for testing or offline analysis)
+#### Profile Management:
+- Access your profile from the user menu in the top-right corner
+- Update personal information (name, contact details)
+- Change your password (requires current password verification)
+- Set notification preferences
+
+### Dashboard Navigation
+
+The dashboard is your central control center, featuring:
+
+#### Main Panel:
+- Live video feed with AI detection overlays
+- Current system status indicators
+- Quick access to recent alerts
+- System performance metrics
+
+#### Navigation Sidebar:
+- Dashboard (home)
+- Archive (detection history)
+- Reports (analytics)
+- Settings
+- Help & Support
+
+#### Status Bar:
+- Connection status indicators
+- Current video source
+- Quick settings toggle
+
+### Configuring Video Sources
+
+#### Navigate to Settings > Video Source:
+- Click on the settings icon or use the sidebar navigation
+
+#### Select Video Source Type:
+
+##### Camera: Use built-in webcam or connected cameras
+- Select from the dropdown list of available devices
+- Adjust resolution and frame rate if needed
+- Test the connection before saving
+
+##### IP Camera:
+- Enter the RTSP/HTTP URL (e.g., `rtsp://username:password@camera_ip:port/stream`)
+- Specify authentication details if required
+- Test the connection before saving
+- Common formats:
+  - Hikvision: `rtsp://username:password@camera_ip:554/Streaming/Channels/101`
+  - Dahua: `rtsp://username:password@camera_ip:554/cam/realmonitor?channel=1&subtype=0`
+  - Generic ONVIF: `rtsp://camera_ip:554/onvif1`
+
+##### Upload Video:
+- Click "Choose File" to select a video from your device
+- Supported formats: MP4, AVI, MOV (max size: 500MB)
+- Click "Upload" and wait for processing confirmation
+- The system will analyze the uploaded video as if it were a live stream
+
+##### Stream URL:
+- Enter public stream URLs for testing
+- Ensure you have proper rights to access the stream
+
+#### Video Configuration:
+- Adjust frame rate for optimal performance
+- Set resolution based on your network capabilities
+- Configure buffer settings for smoother playback
 
 ### Setting Up Regions of Interest (ROI)
 
-1. Go to Settings > Region of Interest
-2. Use the ROI Editor to draw polygons around areas you want to monitor
-3. Save your settings
+#### Access ROI Editor:
+- Go to Settings > Region of Interest
+- Click on the "Edit ROI" button
 
-### Monitoring and Alerts
+#### Drawing ROI Areas:
+- The video feed will freeze to allow you to draw
+- Click on the video to place points forming a polygon
+- Continue clicking to add more points
+- Click near the first point to close the polygon
+- Multiple ROIs can be created for different areas
 
-1. The Dashboard shows the live video feed with AI detection overlays
-2. When a package is detected and then disappears, the system will:
-   - Generate an alert in the dashboard
-   - Send an email notification (if configured)
-   - Create an entry in the detection archive
+#### Editing ROI Areas:
+- Click on an existing ROI to select it
+- Drag points to adjust the shape
+- Right-click on a point to delete it
+- Double-click on a line to add a new point
 
-### Reviewing Detections
+#### ROI Options:
+- Name each ROI for easier identification
+- Set sensitivity levels per ROI (High/Medium/Low)
+- Toggle individual ROIs on/off without deleting them
+- Set color coding for different types of areas
 
-1. Use the Archive section to view all past detections
-2. Filter by date, detection type, and confidence level
-3. Mark detections as "Verified Safe" or "Verified Theft"
+#### Saving ROI Configuration:
+- Click "Save ROIs" to confirm your changes
+- The system will immediately begin using the new ROI settings
 
-### Analyzing Reports
+### Monitoring and Alert System
 
-1. Visit the Reports section to view detection statistics
-2. Analyze trends in package deliveries and potential theft incidents
-3. View confidence levels and verification status of detections
+#### Real-time Monitoring:
+- The dashboard displays active monitoring status
+- Detection boxes appear around identified objects
+- Object labels and confidence scores are displayed
+- Color-coded alerts indicate different detection types:
+  - Green: Package detected
+  - Yellow: Person near package
+  - Red: Potential theft in progress
+
+#### Alert Notifications:
+
+##### In-App Alerts:
+- Immediate pop-up notifications for critical events
+- Alert counter in the navigation bar
+- Sound alerts (can be toggled on/off)
+
+##### Email Notifications:
+- Instant emails for critical alerts include:
+  - Detection timestamp
+  - Detection type (package, person, potential theft)
+  - Confidence level
+  - Screenshot of the event
+  - Link to view the full alert in the web interface
+
+##### Notification Settings:
+- Configure notification thresholds
+- Set quiet hours
+- Choose which events trigger notifications
+
+#### Alert Response:
+- Click on an alert to view details
+- Watch the video clip of the detected event
+- Mark alerts as "Reviewed" or "False Positive"
+- Add notes to alerts for future reference
+
+### Managing Detection Archive
+
+#### Accessing the Archive:
+- Navigate to the Archive section from the sidebar
+- View a chronological list of all detection events
+
+#### Filtering and Sorting:
+- Filter by date range using the calendar picker
+- Filter by detection type (package, person, theft)
+- Filter by confidence level (slider)
+- Sort by time, type, or verification status
+
+#### Detection Details:
+- Click on any detection to view detailed information
+- View the detection video clip (10 seconds before and after)
+- See metadata including:
+  - Timestamp
+  - Object type
+  - Confidence score
+  - ROI zone where detected
+  - Device that captured the footage
+
+#### Verification Actions:
+- Mark detections as:
+  - Verified Safe (legitimate delivery or household member)
+  - Verified Theft (confirmed package theft)
+  - False Positive (incorrect detection)
+- Add notes to provide context
+- Flag important events for follow-up
+
+#### Export Options:
+- Download detection clips as MP4 files
+- Export detection data as CSV
+- Generate printable reports for law enforcement
+
+### Analytics and Reporting
+
+#### Accessing Reports:
+- Navigate to the Reports section from the sidebar
+
+#### Dashboard Analytics:
+- View detection statistics for selected time periods
+- Interactive charts showing:
+  - Detection frequency by day/week/month
+  - Distribution of detection types
+  - Confidence level distributions
+  - Peak detection times
+
+#### Custom Reports:
+- Create reports for specific date ranges
+- Filter by detection types
+- Include or exclude specific ROIs
+- Add custom notes and observations
+
+#### Exporting Reports:
+- Download reports as PDF
+- Export raw data as CSV/Excel
+- Share reports via email
+
+### System Settings and Optimization
+
+#### Performance Settings:
+- Adjust processing resolution to balance accuracy vs. CPU usage
+- Configure frame rate for analysis
+- Set detection sensitivity thresholds
+- Enable/disable features based on your hardware capabilities
+
+#### Detection Settings:
+- Set minimum confidence threshold for alerts (default: 60%)
+- Configure object persistence time (how long an object must be present)
+- Adjust theft detection parameters (time thresholds)
+
+#### Storage Management:
+- Set video retention period
+- Configure automatic cleanup of old detections
+- View storage usage statistics
+
+#### Network Settings:
+- Configure bandwidth limits
+- Set up proxy settings if needed
+- Test connection to Roboflow API
+
+### Troubleshooting Guide
+
+#### Video Feed Issues
+
+##### No Video Feed:
+- Check that your camera is properly connected
+- Verify camera permissions in your browser
+- Ensure the correct video source is selected
+- Restart the application if the feed freezes
+
+##### Poor Video Quality:
+- Check your internet connection if using an IP camera
+- Lower the resolution in settings
+- Ensure adequate lighting in the monitored area
+- Clean the camera lens if applicable
+
+##### IP Camera Connection Failures:
+- Verify the camera is powered on and connected to your network
+- Double-check the RTSP/HTTP URL format
+- Ensure username and password are correct
+- Check that your firewall allows the connection
+
+#### Detection Issues
+
+##### False Positives:
+- Increase the confidence threshold in settings
+- Refine your ROI to exclude areas with movement
+- Adjust lighting to reduce shadows and reflections
+- Update to the latest AI model if available
+
+##### Missed Detections:
+- Lower the confidence threshold
+- Ensure packages are visible and not obscured
+- Adjust camera positioning for better coverage
+- Expand ROI to include all relevant areas
+
+##### Tracking Issues:
+- Increase processing resolution
+- Reduce camera movement (wind, vibrations)
+- Ensure consistent lighting (avoid extreme light changes)
+- Check for objects that might block the view
+
+#### Notification Issues
+
+##### No Email Alerts:
+- Check your spam/junk folder
+- Verify your email address is correct in profile settings
+- Ensure email notification are enabled in settings
+- Check SMTP server configuration in .env file
+
+##### Delayed Notifications:
+- Check your internet connection
+- Verify server resources are adequate
+- Consider upgrading your hosting plan if using cloud deployment
+
+#### Database and Storage Issues
+
+##### "Database Connection Failed" Error:
+- Check MongoDB is running
+- Verify connection details in .env file
+- Ensure database user has correct permissions
+- Check disk space for database storage
+
+##### Storage Full Warning:
+- Delete unnecessary detection videos
+- Adjust video retention settings
+- Archive old data or expand storage capacity
+- Lower video quality settings to reduce file sizes
 
 ## Docker Deployment Details
 
@@ -192,7 +447,27 @@ docker-compose logs -f
 
 # Stop the application
 docker-compose down
+
+# Update containers (after code changes)
+docker-compose build
+docker-compose up -d
 ```
+
+### Docker Troubleshooting
+
+#### Container Fails to Start:
+- Check logs: `docker-compose logs app`
+- Verify environment variables in .env file
+- Ensure ports are not already in use
+
+#### Camera Access in Docker:
+- Add `--device=/dev/video0:/dev/video0` to docker run command
+- Ensure the host system has proper camera permissions
+
+#### Performance Issues:
+- Allocate more resources to Docker (CPU, RAM)
+- Use volume mounts instead of copying files when possible
+- Consider enabling GPU support for faster AI processing
 
 ## Technical Details
 
