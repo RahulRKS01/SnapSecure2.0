@@ -1,0 +1,28 @@
+<div class="archive-grid" id="archiveContent">
+    {% for detection in detections %}
+    <div class="card" 
+         data-image="{{ detection.image }}" 
+         data-type="{{ detection.type_of_detection }}" 
+         data-confidence="{{ detection.confidence }}" 
+         data-date="{{ detection.date }}" 
+         data-time="{{ detection.time }}">
+        <div class="card-image">
+            <img src="{{ detection.image }}" alt="{{ detection.type_of_detection }}">
+            <div class="hover-overlay">
+                <span>View Image</span>
+            </div>
+        </div>
+        <div class="card-body">
+            <span>Type: {{ detection.type_of_detection }}</span>
+            <span>Confidence: {{ detection.confidence }}</span>
+            <span>Date: {{ detection.date }}</span>
+            <span>Time: {{ detection.time }}</span>
+        </div>
+    </div>
+    {% endfor %}
+    {% if not detections %}
+    <div class="empty-state">
+        <p>No results found matching your filters.</p>
+    </div>
+    {% endif %}
+</div>

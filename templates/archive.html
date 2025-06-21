@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-container">
+    <div class="header">
+        <h1>Archive</h1>
+        <div class="profile-avatar">
+            <a href="{{ url_for('profile') }}">
+                <img src="{{ url_for('static', filename='images/ProfilePicture.jpg') }}" alt="Profile Picture">
+            </a>
+        </div>
+    </div>
+    
+    <div class="filters">
+        <div class="filter-group">
+            <label for="startDate" class="filter-label">Start Date:</label>
+            <input type="date" id="startDate" class="filter-input">
+        </div>
+        <div class="filter-group">
+            <label for="endDate" class="filter-label">End Date:</label>
+            <input type="date" id="endDate" class="filter-input">
+        </div>
+        <div class="filter-group">
+            <label for="detectionType" class="filter-label">Detection Type:</label>
+            <select id="detectionType" class="filter-input">
+                <option value="all">All</option>
+                <option value="package">Package</option>
+                <option value="theft">Theft</option>
+            </select>
+        </div>
+        <button id="applyFilters" class="btn btn-primary">Apply Filters</button>
+        <button id="resetFilters" class="btn btn-outline">Reset</button>
+    </div>
+    
+    <div class="archive-grid" id="archiveContent">
+        {% for detection in detections %}
+        <div class="card" 
+             data-image="{{ detection.image if detection.image else 'static/images/default-img.jpg' }}" 
+             data-type="{{ detection.type_of_detection or 'N/A' }}" 
+             data-confidence="{{ detection.confidence or 'N/A' }}" 
+             data-date="{{ detection.date or 'N/A' }}" 
+             data-time="{{ detection.time or 'N/A' }}"
+             data-detection-id="{{ detection.detection_id }}">
+            <!-- Consider adding a hidden debug span -->
+            <span style="display:none;" class="detection-id-debug">ID: {{ detection.detection_id }}</span>
+            <div class="card-image">
+                <img src="{{ detection.image or 'static/images/default-img.jpg' }}" 
+                     alt="{{ detection.type_of_detection or 'Unknown' }}" 
+                     onerror="this.src='static/images/default-img.jpg'">
+                <div class="hover-overlay">
+                    <span>View Image</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <span>Type: {{ detection.type_of_detection or 'N/A' }}</span>
+                <span>
+                    Confidence: 
+                    <span class="confidence-label {% if detection.confidence < 0.5 %}low{% elif detection.confidence < 0.75 %}medium{% else %}high{% endif %}">
+                        {% if detection.confidence < 0.5 %}
+                            Low
+                        {% elif detection.confidence < 0.75 %}
+                            Medium
+                        {% else %}
+                            High
+                        {% endif %}
+                    </span>
+                </span>
+                <span>Date: {{ detection.date or 'N/A' }}</span>
+                <span>Time: {{ detection.time or 'N/A' }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Modal for Enlarged View -->
+    <div id="detectionModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div class="modal-image">
+                <img id="modalImage" src="" alt="Detection Image" onerror="this.src='static/images/default-img.jpg'">
+            </div>
+            <div class="modal-details">
+                <p><strong>Type:</strong> <span id="modalType"></span></p>
+                <p><strong>Confidence:</strong> <span id="modalConfidence"></span></p>
+                <p><strong>Date:</strong> <span id="modalDate"></span></p>
+                <p><strong>Time:</strong> <span id="modalTime"></span></p>
+                
+                <!-- Add this delete button section -->
+                <div class="delete-container">
+                    <button id="deleteDetectionBtn" class="delete-btn" data-detection-id="">
+                        <i class="fas fa-trash"></i> Delete Detection
+                    </button>
+                </div>
+            </div>
+            <div class="fullscreen-container">
+                <button id="fullscreenButton" class="fullscreen-btn" onclick="expandToFullscreen()">Expand to Fullscreen</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/archive.css') }}">
+<script src="{{ url_for('static', filename='js/archive.js') }}"></script>
+{% endblock %}

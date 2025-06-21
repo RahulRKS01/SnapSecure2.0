@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnapSecure</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/live_feed.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    {% block head %}{% endblock %}
+    <script src="{{ url_for('static', filename='js/theme-switcher.js') }}"></script>
+</head>
+<body>
+    <div class="app-container">
+        {% if session.get('user_id') %}
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-logo">
+                    <span>SS</span>
+                </div>
+                <nav class="sidebar-nav">
+                    <a href="{{ url_for('dashboard') }}" class="sidebar-link {% if request.path == url_for('dashboard') %}active{% endif %}">
+                        <i class="fas fa-home"></i>
+                        <span class="sidebar-tooltip">Dashboard</span>
+                    </a>
+                    <a href="{{ url_for('video_feed') }}" class="sidebar-link {% if request.path == url_for('video_feed') %}active{% endif %}">
+                        <i class="fas fa-video"></i>
+                        <span class="sidebar-tooltip">Live Feed</span>
+                    </a>
+                    <a href="{{ url_for('archive') }}" class="sidebar-link {% if request.path == url_for('archive') %}active{% endif %}">
+                        <i class="fas fa-archive"></i>
+                        <span class="sidebar-tooltip">Archive</span>
+                    </a>
+                    <a href="{{ url_for('reports') }}" class="sidebar-link {% if request.path == url_for('reports') %}active{% endif %}">
+                        <i class="fas fa-chart-bar"></i>
+                        <span class="sidebar-tooltip">Reports</span>
+                    </a>
+                    <a href="{{ url_for('profile') }}" class="sidebar-link {% if request.path == url_for('profile') %}active{% endif %}">
+                        <i class="fas fa-user"></i>
+                        <span class="sidebar-tooltip">Profile</span>
+                    </a>
+                    <a href="{{ url_for('settings') }}" class="sidebar-link {% if request.path == url_for('settings') %}active{% endif %}">
+                        <i class="fas fa-cog"></i>
+                        <span class="sidebar-tooltip">Settings</span>
+                    </a>
+                </nav>
+                <div class="sidebar-bottom">
+                    <a href="{{ url_for('logout') }}" class="sidebar-link">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span class="sidebar-tooltip">Logout</span>
+                    </a>
+                </div>
+            </aside>
+        {% endif %}
+
+        <!-- Main Content -->
+        <main class="main-content {% if not session.get('user_id') %}auth-layout{% endif %}">
+            <!-- Flash Message Container -->
+            <div id="flash-message-container" class="flash-message-container">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="flash-message flash-{{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <div id="logoutModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2>Confirm Logout</h2>
+            <p>Are you sure you want to log out?</p>
+            <div class="modal-actions">
+                <button id="confirmLogout" class="btn btn-danger">Logout</button>
+                <button id="cancelLogout" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/base.js') }}"></script>
+    {% block scripts %}{% endblock %}
+    <script>
+        // Automatically remove flash messages after 5 seconds
+        document.addEventListener("DOMContentLoaded", () => {
+            const flashMessages = document.querySelectorAll(".flash-message");
+            flashMessages.forEach((message) => {
+                setTimeout(() => {
+                    message.style.opacity = "0"; // Fade out
+                    setTimeout(() => message.remove(), 500); // Remove after fade-out
+                }, 5000); // 5 seconds
+            });
+        });
+    </script>
+</body>
+</html>

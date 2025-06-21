@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/reports.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div class="header">
+        <h1>Detection Report</h1>
+        <div class="profile-avatar">
+            <a href="{{ url_for('profile') }}">
+                <img src="{{ url_for('static', filename='images/ProfilePicture.jpg') }}" alt="Profile Picture">
+            </a>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <div class="title-with-tooltip">
+                <h2>Detection Graph</h2>
+                <div class="info-icon-container">
+                    <i class="fas fa-info-circle info-icon"></i>
+                    <div class="tooltip">
+                        Click on the legend items below to filter the data displayed on the graph.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="graph-container">
+                <canvas id="detectionChart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h2>Statistics</h2>
+        </div>
+        <div class="card-body">
+            <div class="statistics-grid">
+                <div class="stat-item">
+                    <div class="stat-label">Total Records</div>
+                    <div class="stat-value">{{ total_detections }}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Records with Package Theft</div>
+                    <div class="stat-value">{{ total_thefts }}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Records with No Package Theft</div>
+                    <div class="stat-value">{{ total_safe }}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">High Confidence Records</div>
+                    <div class="stat-value">{{ high_confidence }}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Medium Confidence Records</div>
+                    <div class="stat-value">{{ medium_confidence }}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Low Confidence Records</div>
+                    <div class="stat-value">{{ low_confidence }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h2>Detection Table</h2>
+        </div>
+
+        <div class="card-body">
+            <div class="search-container">
+                <div class="search-input">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search..." id="tableSearch" onkeyup="searchTable()">
+                </div>
+            </div>
+            <div class="filter-pills">
+                <button class="pill active" onclick="filterRecords('all')">All</button>
+                <button class="pill" onclick="filterRecords('package-theft')">Package theft</button>
+                <button class="pill" onclick="filterRecords('no-package-theft')">No package theft</button>
+                <button class="pill" onclick="filterRecords('high-confidence')">High confidence</button>
+                <button class="pill" onclick="filterRecords('medium-confidence')">Medium confidence</button>
+                <button class="pill" onclick="filterRecords('low-confidence')">Low confidence</button>
+            </div>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th onclick="sortTableById()" style="cursor: pointer;">Detection ID <span id="sortIcon">▲</span></th> <!-- Clickable header -->
+                            <th onclick="sortTableByDate()" style="cursor: pointer;">Date <span id="sortIconDate">▲</span></th> <!-- Clickable header -->
+                            <th>Time</th>
+                            <th>Type</th>
+                            <th>Confidence</th>
+                            <th>Status</th>
+                            <th>Verification Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detectionTableBody">
+                        {% for detection in detection_data %}
+                        <tr data-confidence="{{ detection.confidence_level | lower }}">
+                            <td>{{ detection.detection_id }}</td>
+                            <td>{{ detection.date }}</td>
+                            <td>{{ detection.time }}</td>
+                            <td>{{ detection.type_of_detection }}</td>
+                            <td>
+                                <span class="inline-block px-2 py-1 rounded-full text-xs 
+                                    {% if detection.confidence_level == 'High' %}bg-green-500/20 text-green-300{% elif detection.confidence_level == 'Medium' %}bg-yellow-500/20 text-yellow-300{% else %}bg-red-500/20 text-red-300{% endif %}">
+                                    {{ detection.confidence_level }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="inline-block px-2 py-1 rounded-full text-xs 
+                                    {% if detection.status is none %}bg-gray-500/20 text-gray-300{% elif detection.status == false %}bg-red-500/20 text-red-300{% else %}bg-green-500/20 text-green-300{% endif %}">
+                                    {% if detection.status is none %}
+                                        None
+                                    {% elif detection.status == false %}
+                                        Taken
+                                    {% elif detection.status == true %}
+                                        Detecting
+                                    {% endif %}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="inline-block px-2 py-1 rounded-full text-xs 
+                                    {% if detection.verification is none %}bg-gray-500/20 text-gray-300{% elif detection.verification == false %}bg-red-500/20 text-red-300{% else %}bg-green-500/20 text-green-300{% endif %}">
+                                    {% if detection.verification is none %}
+                                        Unverified
+                                    {% elif detection.verification == false %}
+                                        Theft
+                                    {% elif detection.verification == true %}
+                                        Safe
+                                    {% endif %}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>PDF Generator</h2>
+        </div>
+        <div class="card-body">
+            <form action="{{ url_for('generate_pdf_report') }}" method="get" class="report-form">
+                <div class="date-range-container">
+                    <div class="form-group">
+                        <label for="start_date">Start Date:</label>
+                        <input type="date" id="start_date" name="start_date" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="end_date">End Date:</label>
+                        <input type="date" id="end_date" name="end_date" class="form-control">
+                    </div>
+                </div>
+                
+                <div class="report-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-file-pdf"></i> Generate PDF Report
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="resetDates()">
+                        <i class="fas fa-sync"></i> Reset Dates (All Time)
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Pass detection_data from Flask to JavaScript
+    const detectionData = JSON.parse('{{ detection_data | tojson | safe }}');
+</script>
+<script>
+    const graphData = JSON.parse('{{ graph_data | tojson | safe }}');
+</script>
+<script>
+    const statisticsData = {
+        highConfidence: "{{ high_confidence }}",
+        mediumConfidence: "{{ medium_confidence }}",
+        lowConfidence: "{{ low_confidence }}"
+    };
+</script>
+<script src="{{ url_for('static', filename='js/reports.js') }}"></script>
+<script>
+    // Set default end date to today
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('end_date').value = today;
+        
+        // Set default start date to 30 days ago
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        document.getElementById('start_date').value = thirtyDaysAgo.toISOString().split('T')[0];
+    });
+    
+    // Function to reset date inputs
+    function resetDates() {
+        document.getElementById('start_date').value = '';
+        document.getElementById('end_date').value = '';
+    }
+</script>
+{% endblock %}

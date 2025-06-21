@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/css/settings.css">
+<div class="settings-container">
+    <h1 class="settings-title">Settings</h1>
+
+    <!-- Notifications Tab -->
+    <div class="tab-content active" id="notifications">
+
+        <div class="form-section">
+            <h2>Region of Interest (ROI)</h2>
+            <div class="form-group">
+                <div class="feature-description">
+                    <div class="collapsible-container">
+                        <button class="collapsible-trigger">How to use ROI Editor <span class="toggle-icon">▼</span></button>
+                        <div class="collapsible-content">
+                            <ul>
+                                <li><strong>Left-click:</strong> Add points to create a polyline</li>
+                                <li><strong>Right-click:</strong> Delete the last point of the polyline</li>
+                                <li><strong>Double-click:</strong> Complete the current polyline</li>
+                                <li><strong>Click on a polyline:</strong> Select it for deletion</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <button id="editROI" class="btn btn-primary">Edit ROI</button>
+                </div>
+            </div>
+        </div>
+        <!--Light mode Settings Under Construction
+        <div class="form-section">
+            <h2>Display Settings</h2>
+            <div class="form-group">
+                <div class="toggle-item">
+                    <div class="toggle-label">
+                        <strong>Theme Mode</strong>
+                        <p>Toggle between dark and light mode</p>
+                    </div>
+                    <div class="toggle-switch theme-toggle">
+                        <input type="checkbox" id="themeToggle">
+                        <span class="slider-toggle"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        -->
+        <div class="form-section">
+            <h2>Video Source</h2>
+            <div class="collapsible-container">
+                <button class="collapsible-trigger">
+                    Select Video Source <span class="toggle-icon">▼</span>
+                </button>
+                <div class="collapsible-content">
+                    <label for="videoSource">Choose a video source:</label>
+                    <select id="videoSource" name="videoSource" class="form-input">
+                        <option value="camera" {% if video_source == "camera" %}selected{% endif %}>Camera</option>
+                        <option value="upload" {% if video_source == "upload" %}selected{% endif %}>Upload Video</option>
+                        <option value="stream" {% if video_source == "stream" %}selected{% endif %}>Video Stream</option>
+                    </select>
+                    <p class="form-help">Choose the source of the video footage for analysis.</p>
+
+                    <!-- Upload Video Section -->
+                    <div id="uploadVideoSection" style="display: none;">
+                        <label for="videoFile">Upload Video:</label>
+                        <input type="file" id="videoFile" name="videoFile" accept="video/*" class="form-input">
+                        <p class="form-help">Upload a video file for analysis.</p>
+                        <button id="uploadButton" class="btn-primary">Upload</button>
+                    </div>
+
+                    <!-- IP Camera Address Section -->
+                    <div id="ipCameraSection" style="display: none;">
+                        <label for="ipCameraAddress">IP Camera Address:</label>
+                        <input type="text" id="ipCameraAddress" name="ipCameraAddress" class="form-input" placeholder="Enter IP camera address" value="{{ ip_camera_address }}">
+                        <p class="form-help">Enter the IP address of your IP camera (e.g., http://192.168.1.100:8080).</p>
+                        <button id="submitIpCamera" class="btn-primary">Submit</button>
+                    </div>
+
+                    <!-- Camera Selection Section -->
+                    <div id="cameraSelectionSection" style="display: none;">
+                        <label for="cameraIndex">Select Camera:</label>
+                        <select id="cameraIndex" name="cameraIndex" class="form-input">
+                            <option value="" disabled selected>Select a camera</option>
+                        </select>
+                        <p class="form-help">Choose the camera to use for video input.</p>
+                        <button id="submitCameraIndex" class="btn-primary">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Save Settings Button -->
+    <button id="saveSettings" class="btn-primary">Save Settings</button>
+</div>
+
+<script src="/static/js/settings.js"></script>
+<script>
+    function saveVideoSource() {
+        const videoSource = document.getElementById('videoSource').value;
+
+        fetch('/update_video_source', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ videoSource })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while saving the video source.');
+        });
+    }
+
+    const videoSource = document.getElementById('videoSource');
+    const uploadVideoSection = document.getElementById('uploadVideoSection');
+    const ipCameraSection = document.getElementById('ipCameraSection');
+    const cameraSelectionSection = document.getElementById('cameraSelectionSection');
+
+    videoSource.addEventListener('change', function () {
+        if (videoSource.value === 'upload') {
+            uploadVideoSection.style.display = 'block';
+            ipCameraSection.style.display = 'none';
+            cameraSelectionSection.style.display = 'none';
+        } else if (videoSource.value === 'stream') {
+            ipCameraSection.style.display = 'block';
+            uploadVideoSection.style.display = 'none';
+            cameraSelectionSection.style.display = 'none';
+        } else if (videoSource.value === 'camera') {
+            cameraSelectionSection.style.display = 'block';
+            uploadVideoSection.style.display = 'none';
+            ipCameraSection.style.display = 'none';
+        } else {
+            uploadVideoSection.style.display = 'none';
+            ipCameraSection.style.display = 'none';
+            cameraSelectionSection.style.display = 'none';
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit ROI</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+            display: block;
+            margin: 0 auto;
+        }
+        .controls {
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Edit ROI</h1>
+    <canvas id="roiCanvas" width="640" height="480"></canvas>
+    <div class="controls">
+        <button id="saveButton">Save</button>
+        <button id="clearButton">Clear</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('roiCanvas');
+        const ctx = canvas.getContext('2d');
+        let polylines = [];
+        let currentPolyline = [];
+        let isDrawing = false;
+
+        // Load existing polylines from the server
+        fetch('/get_polylines')
+            .then(response => response.json())
+            .then(data => {
+                polylines = data.polylines || [];
+                drawPolylines();
+            })
+            .catch(error => console.error('Error loading polylines:', error));
+
+        // Draw all polylines
+        function drawPolylines() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = 'green';
+            ctx.lineWidth = 2;
+
+            // Draw existing polylines
+            polylines.forEach(polyline => {
+                ctx.beginPath();
+                polyline.forEach((point, index) => {
+                    if (index === 0) {
+                        ctx.moveTo(point[0], point[1]);
+                    } else {
+                        ctx.lineTo(point[0], point[1]);
+                    }
+                });
+                ctx.closePath();
+                ctx.stroke();
+            });
+
+            // Draw the current polyline
+            if (currentPolyline.length > 0) {
+                ctx.strokeStyle = 'red';
+                ctx.beginPath();
+                currentPolyline.forEach((point, index) => {
+                    if (index === 0) {
+                        ctx.moveTo(point[0], point[1]);
+                    } else {
+                        ctx.lineTo(point[0], point[1]);
+                    }
+                });
+                ctx.stroke();
+            }
+        }
+
+        // Handle mouse events
+        canvas.addEventListener('mousedown', (e) => {
+            isDrawing = true;
+            currentPolyline.push([e.offsetX, e.offsetY]);
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isDrawing) return;
+            currentPolyline.push([e.offsetX, e.offsetY]);
+            drawPolylines();
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            isDrawing = false;
+            if (currentPolyline.length > 0) {
+                polylines.push(currentPolyline);
+                currentPolyline = [];
+                drawPolylines();
+            }
+        });
+
+        // Clear all polylines
+        document.getElementById('clearButton').addEventListener('click', () => {
+            polylines = [];
+            currentPolyline = [];
+            drawPolylines();
+        });
+
+        // Save polylines to the server
+        document.getElementById('saveButton').addEventListener('click', () => {
+            fetch('/save_polylines', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ polylines })
+            })
+                .then(response => response.json())
+                .then(data => alert(data.message))
+                .catch(error => console.error('Error saving polylines:', error));
+        });
+    </script>
+</body>
+</html>

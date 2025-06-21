@@ -1,0 +1,376 @@
+/* General Settings Container */
+.settings-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #fff;
+}
+
+.settings-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: transparent;
+    color: #aaa;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-size: 1rem;
+    text-align: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.tab-button.active {
+    background-color: #333;
+    color: #fff;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Form Section */
+.form-section {
+    margin-bottom: 2rem;
+}
+
+.form-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 5px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background-color: #2a2a2a;
+    color: #fff;
+}
+
+.form-help {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-top: 5px;
+}
+
+.preference-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.preference-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #222;
+    border-radius: 0.5rem;
+}
+
+.preference-item label {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.preference-item .form-help {
+    font-size: 0.875rem;
+    color: #aaa;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 20px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #4caf50;
+}
+
+input:checked + .slider:before {
+    transform: translateX(20px);
+}
+
+/* Save Button */
+.btn-primary {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* Toast Notification */
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 4px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast-success {
+    background-color: #4caf50;
+}
+
+.toast-error {
+    background-color: #e74c3c;
+}
+
+/* Feature Description from Web browser*/
+.feature-description {
+    display: flex; /* Enables flexbox layout */
+    flex-direction: column; /* Arranges children vertically */
+    align-items: start; /* Aligns children to the start of the container */
+    gap: 20px; /* Sets the gap between the flex items */
+  }
+  
+  button#editROI {
+    margin-top: 20px; /* Adds a top margin to create space above the button */
+    margin-left: 0; /* removes the left margin */
+  }
+
+/* Collapsible Container */
+.collapsible-container {
+    margin-top: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Trigger Button */
+.collapsible-trigger {
+    background: linear-gradient(135deg, #1f1f1f, #2a2a2a); /* Sleek gradient background */
+    color: #00d4ff; /* Futuristic neon blue text */
+    cursor: pointer;
+    padding: 15px;
+    width: 100%;
+    border: 1px solid #333;
+    text-align: left;
+    outline: none;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.collapsible-trigger:hover {
+    background: linear-gradient(135deg, #2a2a2a, #3a3a3a); /* Slightly lighter gradient on hover */
+    color: #00ffff; /* Brighter neon blue on hover */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5), 0 0 10px #00d4ff; /* Glowing effect */
+}
+
+/* Collapsible Content */
+.collapsible-content {
+    padding: 0;
+    max-height: 0; /* Collapsed state */
+    overflow: hidden;
+    transition: max-height 0.5s ease-in-out, padding 0.3s ease;
+    background: linear-gradient(135deg, #2a2a2a, #1f1f1f); /* Reverse gradient for contrast */
+    border-radius: 0 0 8px 8px;
+    color: #e0e0e0; /* Soft white text for readability */
+    border: 1px solid #333;
+    border-top: none;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.collapsible-content.active {
+    padding: 15px;
+    max-height: 1000px; /* Set a very large max-height to ensure all content is visible */
+    overflow: visible; /* Ensure no content is cut off */
+}
+
+/* List Items */
+.collapsible-content ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.collapsible-content li {
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+    position: relative;
+    padding-left: 20px;
+    color: #b0f7ff; /* Subtle neon blue for list items */
+}
+
+.collapsible-content li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #00d4ff; /* Neon blue bullet points */
+    font-size: 18px;
+}
+
+.collapsible-content label {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    display: block;
+    color: #b0f7ff; /* Subtle neon blue for labels */
+}
+
+.collapsible-content select,
+.collapsible-content input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background-color: #2a2a2a;
+    color: #fff;
+    font-size: 1rem;
+}
+
+.collapsible-content .form-help {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-top: 5px;
+}
+
+/* Toggle Icon */
+.toggle-icon {
+    color: #00d4ff; /* Matches the text color */
+    font-size: 18px;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.toggle-icon.active {
+    transform: rotate(-180deg);
+    color: #00ffff; /* Brighter neon blue when active */
+}
+
+/* Add these styles to enhance the theme toggle */
+.theme-toggle .slider-toggle {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #121212;
+    transition: .4s;
+    border-radius: 1.5rem;
+}
+
+.theme-toggle .slider-toggle:before {
+    position: absolute;
+    content: "";
+    height: 1.25rem;
+    width: 1.25rem;
+    left: 0.125rem;
+    bottom: 0.125rem;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+.theme-toggle input:checked + .slider-toggle {
+    background-color: #00d4ff;
+}
+
+.theme-toggle input:checked + .slider-toggle:before {
+    transform: translateX(1.5rem);
+}
+
+/* Optional animated background transition for the whole page */
+html {
+    transition: background-color 0.5s ease;
+}
+
+[data-theme="light"] {
+    --toast-background: rgba(255, 255, 255, 0.9);
+    --toast-text: #1a1f36;
+    --toast-shadow: 0 4px 12px rgba(0, 212, 255, 0.15);
+}
+
+[data-theme="light"] .toast {
+    background-color: var(--toast-background);
+    color: var(--toast-text);
+    box-shadow: var(--toast-shadow);
+}

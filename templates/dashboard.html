@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="header">
+        <h1>SnapSecure, Your AI-Powered Package Theft Detection System</h1>
+        <div class="profile-avatar">
+            <a href="{{ url_for('profile') }}">
+                <img src="{{ url_for('static', filename='images/ProfilePicture.jpg') }}" alt="Profile Picture">
+            </a>
+        </div>
+    </div>
+    
+    <div class="dashboard-grid">
+        <div class="dashboard-main">
+            <!-- Live Feed -->
+            <div class="card live-feed-card">
+                <div class="card-header">
+                    <h2>Live Feed</h2>
+                    <div class="card-actions">
+                        <span class="status-indicator">Live</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="feed-container">
+                        <img src="{{ url_for('video_feed') }}" alt="Live Feed" class="feed-image">
+                        <div class="feed-overlay">
+                            <div class="feed-details">
+                                <!-- <span class="feed-location">Front Door Camera</span> -->
+                                <span class="feed-time">{{ now.strftime('%I:%M %p') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feed-controls">
+                        <form action="{{ url_for('archive') }}" method="get">
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <i class="fas fa-history"></i> View Archive
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Detection History -->
+            <div class="card history-card">
+                <div class="card-header">
+                    <h2>Detection History</h2>
+                    <div class="card-actions">
+                        <a href="{{ url_for('reports') }}" class="btn-link">View All</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <ul class="history-list">
+                        {% for entry in history %}
+                        <li class="history-item">
+                            <div class="history-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="history-content">
+                                <div class="history-id">Type of Detection: {{ entry.type_of_detection }}</div>
+                                <div class="history-date">{{ entry.date }}</div>
+                                <div class="history-time">{{ entry.time }}</div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard-sidebar">
+            {% if detections %}
+                {% for detection in detections %}
+                <div class="card alert-card">
+                    <div class="card-body">
+                        <div class="alert-header">
+                            <div class="alert-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div>
+                                <h3>Action Required</h3>
+                                <p>{{ detection.type_of_detection | capitalize }} Detected</p>
+                            </div>
+                            <div class="alert-meta">
+                                <div class="alert-id">Report ID: {{ detection.report_id or 'N/A' }}</div>
+                                <div class="alert-time">{{ detection.date }} at {{ detection.time }}</div>
+                            </div>
+                        </div>
+
+                        <div class="alert-image">
+                            {% if detection.image %}
+                            <img src="data:image/jpeg;base64,{{ detection.image }}" alt="Detection Image" style="max-width: 100%; border: 1px solid #ccc; border-radius: 5px;">
+                            {% else %}
+                            <p>No image available</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="alert-details">
+                            <p><strong>Confidence:</strong> 
+                                <span class="confidence-label {% if detection.confidence < 0.5 %}low{% elif detection.confidence < 0.75 %}medium{% else %}high{% endif %}">
+                                    {% if detection.confidence < 0.5 %}
+                                        Low
+                                    {% elif detection.confidence < 0.75 %}
+                                        Medium
+                                    {% else %}
+                                        High
+                                    {% endif %}
+                                </span>
+                            </p>
+                            <p><strong>Type:</strong> {{ detection.type_of_detection }}</p>
+                            <p><strong>Report ID:</strong> {{ detection.report_id or 'N/A' }}</p>
+                        </div>
+
+                        <div class="alert-actions">
+                            <button class="btn btn-safe" id="verifySafe" data-report-id="{{ detection.report_id }}">
+                                <i class="fas fa-check"></i> Verified Safe
+                            </button>
+                            <button class="btn btn-danger" id="verifyTheft" data-report-id="{{ detection.report_id }}">
+                                <i class="fas fa-exclamation-triangle"></i> Verified Theft
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+            <div class="card alert-card">
+                <div class="card-body">
+                    <h3>No Active Detections</h3>
+                    <p>There are no detections requiring action at this time.</p>
+                </div>
+            </div>
+            {% endif %}
+            <a href="{{ url_for('archive') }}" class="sidebar-link">
+                <i class="fas fa-history"></i> View Archive
+            </a>
+        </div>
+
+        <!-- Toast Notification -->
+        <div id="toast" class="toast"></div>
+        
+        <div class="footer">
+            © 2024 SnapSecure.inc
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script src="/static/js/browser_camera.js"></script>
+{% endblock %}

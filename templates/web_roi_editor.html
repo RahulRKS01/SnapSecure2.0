@@ -1,0 +1,445 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<style>
+    .roi-editor-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .canvas-container {
+        position: relative;
+        margin-bottom: 20px;
+        border: 2px solid #333;
+        border-radius: 5px;
+        overflow: hidden;
+        width: 640px; /* Match the canvas internal width */
+        height: 480px; /* Match the canvas internal height */
+        margin: 0 auto;
+    }
+    
+    #roiCanvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    
+    .controls {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .button-group {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .instructions {
+        background: rgba(0, 0, 0, 0.7);
+        border: 1px solid #444;
+        border-radius: 5px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .instructions h3 {
+        margin-top: 0;
+        color: #00d4ff;
+    }
+    
+    .instructions ul {
+        padding-left: 20px;
+    }
+    
+    .instructions li {
+        margin-bottom: 8px;
+    }
+    
+    .status-bar {
+        background-color: #111;
+        color: #ddd;
+        padding: 10px;
+        border-radius: 4px;
+        margin-top: 15px;
+        font-family: monospace;
+        font-size: 14px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="roi-editor-container">
+    <h1>Region of Interest (ROI) Editor</h1>
+    
+    <div class="instructions">
+        <h3>Instructions</h3>
+        <ul>
+            <li><strong>Left-click:</strong> Add points to create a polyline</li>
+            <li><strong>Double-click:</strong> Complete the current polyline</li>
+            <li><strong>Right-click:</strong> Cancel the current point</li>
+            <li><strong>Click on a polyline:</strong> Select it for deletion</li>
+        </ul>
+    </div>
+    
+    <div class="canvas-container">
+        <canvas id="roiCanvas" width="640" height="480"></canvas>
+    </div>
+    
+    <div class="controls">
+        <div class="button-group">
+            <button id="deleteBtn" class="btn btn-danger">
+                <i class="fas fa-trash"></i> Delete Selected
+            </button>
+            <button id="clearBtn" class="btn btn-warning">
+                <i class="fas fa-eraser"></i> Clear All
+            </button>
+        </div>
+        
+        <div class="button-group">
+            <button id="saveBtn" class="btn btn-success">
+                <i class="fas fa-save"></i> Save ROIs
+            </button>
+            <button id="backBtn" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Settings
+            </button>
+        </div>
+    </div>
+    
+    <div class="status-bar" id="statusBar">
+        Ready to draw. Click on the image to start.
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const canvas = document.getElementById('roiCanvas');
+    const ctx = canvas.getContext('2d');
+    const deleteBtn = document.getElementById('deleteBtn');
+    const saveBtn = document.getElementById('saveBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const backBtn = document.getElementById('backBtn');
+    const statusBar = document.getElementById('statusBar');
+    
+    let polylines = [];
+    let currentPolyline = [];
+    let selectedPolylineIndex = -1;
+    let isDrawing = false;
+    
+    // Load the background image
+    const img = new Image();
+    img.onload = function() {
+        drawCanvas();
+    };
+    img.src = "data:image/jpeg;base64,{{ frame_image }}";
+    
+    // Load existing polylines if available
+    fetch('/get_polylines')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.polylines) {
+                // Convert the saved format to our format
+                polylines = data.polylines.map(poly => 
+                    poly.map(point => ({x: point[0][0], y: point[0][1]}))
+                );
+                drawCanvas();
+                updateStatus(`Loaded ${polylines.length} existing ROI polylines`);
+            }
+        })
+        .catch(error => {
+            console.error('Error loading existing polylines:', error);
+            updateStatus('Could not load existing polylines');
+        });
+    
+    // Draw everything on canvas
+    function drawCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw background image
+        if (img.complete) {
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        }
+        
+        // Draw completed polylines
+        polylines.forEach((points, index) => {
+            ctx.beginPath();
+            
+            if (points.length > 0) {
+                ctx.moveTo(points[0].x, points[0].y);
+                
+                for (let i = 1; i < points.length; i++) {
+                    ctx.lineTo(points[i].x, points[i].y);
+                }
+                
+                // Close the polyline
+                ctx.closePath();
+                
+                // Draw with appropriate style
+                if (index === selectedPolylineIndex) {
+                    ctx.strokeStyle = '#ffff00'; // Yellow for selected
+                    ctx.lineWidth = 3;
+                } else {
+                    ctx.strokeStyle = '#00ff00'; // Green for regular
+                    ctx.lineWidth = 2;
+                }
+                ctx.stroke();
+                
+                // Draw points
+                points.forEach(point => {
+                    ctx.beginPath();
+                    ctx.arc(point.x, point.y, 4, 0, Math.PI * 2);
+                    ctx.fillStyle = index === selectedPolylineIndex ? '#ffff00' : '#00ff00';
+                    ctx.fill();
+                });
+            }
+        });
+        
+        // Draw current polyline being created
+        if (currentPolyline.length > 0) {
+            ctx.beginPath();
+            ctx.moveTo(currentPolyline[0].x, currentPolyline[0].y);
+            
+            for (let i = 1; i < currentPolyline.length; i++) {
+                ctx.lineTo(currentPolyline[i].x, currentPolyline[i].y);
+            }
+            
+            if (isDrawing && currentPolyline.length > 0) {
+                // Draw line to current mouse position when drawing
+                ctx.lineTo(currentMousePos.x, currentMousePos.y);
+            }
+            
+            ctx.strokeStyle = '#ff0000'; // Red for in-progress
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Draw points
+            currentPolyline.forEach(point => {
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, 4, 0, Math.PI * 2);
+                ctx.fillStyle = '#ff0000';
+                ctx.fill();
+            });
+        }
+    }
+    
+    // Track mouse position
+    let currentMousePos = { x: 0, y: 0 };
+
+    // Function to get accurate mouse position relative to canvas
+    function getCanvasCoordinates(e) {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        
+        return {
+            x: (e.clientX - rect.left) * scaleX,
+            y: (e.clientY - rect.top) * scaleY
+        };
+    }
+
+    canvas.addEventListener('mousemove', function(e) {
+        currentMousePos = getCanvasCoordinates(e);
+        
+        if (isDrawing) {
+            drawCanvas();
+        }
+    });
+
+    // Handle mouse clicks with accurate coordinates
+    canvas.addEventListener('click', function(e) {
+        const clickPoint = getCanvasCoordinates(e);
+        
+        // Check if we clicked on an existing polyline
+        const clickedPolylineIndex = findPolylineAtPoint(clickPoint);
+        
+        if (clickedPolylineIndex >= 0) {
+            // If we clicked on a polyline, select it
+            selectedPolylineIndex = clickedPolylineIndex;
+            updateStatus(`Selected polyline ${clickedPolylineIndex + 1}`);
+            drawCanvas();
+            return;
+        }
+        
+        // Otherwise, add a point to current polyline
+        currentPolyline.push(clickPoint);
+        updateStatus(`Added point (${clickPoint.x.toFixed(0)}, ${clickPoint.y.toFixed(0)}). Total points: ${currentPolyline.length}`);
+        drawCanvas();
+    });
+
+    // Double-click to complete the current polyline
+    canvas.addEventListener('dblclick', function(e) {
+        e.preventDefault();
+        
+        if (currentPolyline.length >= 3) {
+            polylines.push([...currentPolyline]);
+            updateStatus(`Completed polyline with ${currentPolyline.length} points`);
+            currentPolyline = [];
+            drawCanvas();
+        } else {
+            updateStatus('Need at least 3 points to complete a polyline');
+        }
+    });
+
+    // Right-click to cancel current point
+    canvas.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        
+        if (currentPolyline.length > 0) {
+            currentPolyline.pop();
+            updateStatus(`Removed last point. Remaining points: ${currentPolyline.length}`);
+            drawCanvas();
+        }
+    });
+    
+    // Helper function to find if a click is near a polyline
+    function findPolylineAtPoint(point) {
+        const threshold = 10; // Distance threshold in pixels
+        
+        for (let i = 0; i < polylines.length; i++) {
+            const polyline = polylines[i];
+            
+            // Check if point is near any polygon edge
+            for (let j = 0; j < polyline.length; j++) {
+                const start = polyline[j];
+                const end = polyline[(j + 1) % polyline.length];
+                
+                // Calculate distance from point to line segment
+                const dist = distToSegment(point, start, end);
+                if (dist < threshold) {
+                    return i;
+                }
+            }
+            
+            // Check if point is inside the polygon
+            if (isPointInPolygon(point, polyline)) {
+                return i;
+            }
+        }
+        
+        return -1;
+    }
+    
+    // Helper function to check if point is in polygon
+    function isPointInPolygon(point, polygon) {
+        if (polygon.length < 3) return false;
+        
+        let inside = false;
+        for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+            const xi = polygon[i].x, yi = polygon[i].y;
+            const xj = polygon[j].x, yj = polygon[j].y;
+            
+            const intersect = ((yi > point.y) !== (yj > point.y))
+                && (point.x < (xj - xi) * (point.y - yi) / (yj - yi) + xi);
+            if (intersect) inside = !inside;
+        }
+        
+        return inside;
+    }
+    
+    // Calculate distance from point to line segment
+    function distToSegment(p, v, w) {
+        const distSq = function(p1, p2) {
+            return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
+        };
+        
+        const l2 = distSq(v, w);
+        if (l2 === 0) return Math.sqrt(distSq(p, v));
+        
+        let t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
+        t = Math.max(0, Math.min(1, t));
+        
+        const projection = {
+            x: v.x + t * (w.x - v.x),
+            y: v.y + t * (w.y - v.y)
+        };
+        
+        return Math.sqrt(distSq(p, projection));
+    }
+    
+    // Delete button handler
+    deleteBtn.addEventListener('click', function() {
+        if (selectedPolylineIndex >= 0) {
+            polylines.splice(selectedPolylineIndex, 1);
+            updateStatus(`Deleted polyline ${selectedPolylineIndex + 1}`);
+            selectedPolylineIndex = -1;
+            drawCanvas();
+        } else {
+            updateStatus('Please select a polyline to delete first');
+        }
+    });
+    
+    // Clear button handler
+    clearBtn.addEventListener('click', function() {
+        if (confirm('Are you sure you want to clear all ROI polylines?')) {
+            polylines = [];
+            currentPolyline = [];
+            selectedPolylineIndex = -1;
+            updateStatus('Cleared all polylines');
+            drawCanvas();
+        }
+    });
+    
+    // Save button handler
+    saveBtn.addEventListener('click', function() {
+        const dataToSave = polylines.map(poly => 
+            poly.map(p => [[p.x, p.y]])
+        );
+        
+        fetch('/save_roi_polylines', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ polylines: dataToSave }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                updateStatus('ROIs saved successfully!');
+                // Show a success message that fades
+                const toast = document.createElement('div');
+                toast.className = 'alert alert-success';
+                toast.style.position = 'fixed';
+                toast.style.top = '20px';
+                toast.style.left = '50%';
+                toast.style.transform = 'translateX(-50%)';
+                toast.style.padding = '10px 20px';
+                toast.style.borderRadius = '5px';
+                toast.style.zIndex = '1000';
+                toast.innerHTML = '<i class="fas fa-check-circle"></i> ROIs saved successfully!';
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    toast.style.transition = 'opacity 0.5s ease';
+                    setTimeout(() => document.body.removeChild(toast), 500);
+                }, 2000);
+            } else {
+                updateStatus('Error: ' + data.message);
+                alert('Error saving ROIs: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            updateStatus('Error saving ROIs');
+            alert('Error saving ROIs');
+        });
+    });
+    
+    // Back button handler
+    backBtn.addEventListener('click', function() {
+        window.location.href = '/settings';
+    });
+    
+    // Update status message
+    function updateStatus(message) {
+        statusBar.textContent = message;
+    }
+});
+</script>
+{% endblock %}

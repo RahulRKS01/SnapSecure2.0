@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_ENV=development
+      - MONGO_URI=${MONGO_URI}
+      - SECRET_KEY=${SECRET_KEY}
+      - API_URL=${API_URL}
+      - API_KEY=${API_KEY}
+      - MODEL_ID=${MODEL_ID}
+      - DISPLAY=${DISPLAY}
+    privileged: true  # Allow privileged access
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:4.4
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: PackageDetectionSystem
+    volumes:
+      - mongo_data:/data/db
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    
+volumes:
+  mongo_data:

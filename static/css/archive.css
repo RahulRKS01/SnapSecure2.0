@@ -1,0 +1,324 @@
+.page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+
+.profile-avatar img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Filters container */
+.filters {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping if space is limited */
+    justify-content: space-between; /* Distribute items evenly */
+    gap: 1rem; /* Add spacing between items */
+    margin-bottom: 1.5rem; /* Add spacing below the filters */
+}
+
+/* Individual filter group */
+.filter-group {
+    flex: 1; /* Allow each filter group to take equal space */
+    min-width: 150px; /* Set a minimum width for smaller screens */
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem; /* Add spacing between label and input */
+}
+
+/* Buttons */
+.filters .btn {
+    flex: 1; /* Allow buttons to take equal space */
+    max-width: 150px; /* Set a maximum width for buttons */
+    text-align: center;
+}
+
+.filter-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.filter-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-date,
+.filter-select {
+    padding: 5px;
+    font-size: 1rem;
+}
+
+
+
+.archive-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adjust for responsive layout */
+    gap: 20px; /* Spacing between grid items */
+    margin-top: 20px;
+}
+
+/* Card container */
+.card {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    background-color: var(--card-background);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: scale(1.02); /* Slight zoom effect on hover */
+}
+
+/* Hover overlay */
+.hover-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background-color: rgba(0, 0, 0, 0.5); /* Tint color */
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.3s ease; /* Smooth fade-in effect */
+}
+
+/* Show overlay on hover */
+.card:hover .hover-overlay {
+    opacity: 1; /* Show the overlay */
+}
+
+.card-image img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+.card-body {
+    padding: 15px;
+    font-size: 14px;
+    color: var(--foreground);
+}
+
+.card-body span {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.empty-state {
+    text-align: center;
+    color: #aaa;
+}
+
+.confidence-label {
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: white;
+}
+
+.confidence-label.low {
+    background-color: #e74c3c; /* Red for low confidence */
+}
+
+.confidence-label.medium {
+    background-color: #f1c40f; /* Yellow for medium confidence */
+}
+
+.confidence-label.high {
+    background-color: #2ecc71; /* Green for high confidence */
+}
+
+/* Modal Styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: row;
+    max-width: 90%;
+    max-height: 90%;
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    overflow: hidden;
+    color: #fff;
+}
+
+.modal-image {
+    flex: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+}
+
+.modal-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.modal-details {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.modal-details p {
+    margin: 0.5rem 0;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 1.5rem;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* Fullscreen button container */
+.fullscreen-container {
+    text-align: center; /* Center the button horizontally */
+    margin-top: 1rem; /* Add spacing above the button */
+}
+
+/* Fullscreen button */
+.fullscreen-btn {
+    display: inline-block; /* Ensure proper alignment */
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.fullscreen-btn:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+/* Fullscreen button */
+.fullscreen-btn {
+    display: block;
+    margin: 1rem auto 0; /* Center the button and add spacing */
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+
+.fullscreen-btn:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+/* Add at the end of the file */
+
+/* Delete button styles */
+.delete-container {
+    margin-top: 1.5rem;
+}
+
+.delete-btn {
+    display: inline-block;
+    background-color: rgba(239, 68, 68, 0.8);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.delete-btn:hover {
+    background-color: rgba(220, 38, 38, 0.9);
+}
+
+/* Confirmation dialog */
+.confirm-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #1e1e1e;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    z-index: 1100;
+    max-width: 400px;
+    width: 100%;
+}
+
+.confirm-dialog h3 {
+    margin-top: 0;
+    color: white;
+}
+
+.confirm-dialog p {
+    margin-bottom: 1.5rem;
+    color: #ccc;
+}
+
+.confirm-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.btn-cancel {
+    background-color: rgba(75, 85, 99, 0.8);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-confirm {
+    background-color: rgba(239, 68, 68, 0.8);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-cancel:hover {
+    background-color: rgba(75, 85, 99, 0.9);
+}
+
+.btn-confirm:hover {
+    background-color: rgba(220, 38, 38, 0.9);
+}

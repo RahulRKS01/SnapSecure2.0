@@ -1,0 +1,309 @@
+.page-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    color: #fff;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.profile-avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.filter-pills {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.pill {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    background-color: #333;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.pill.active {
+    background-color: #555;
+}
+
+.pill:hover {
+    background-color: #444;
+}
+
+.card {
+    background-color: #222;
+    border: 1px solid #444;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 16px;
+    background-color: #333;
+    border-bottom: 1px solid #444;
+    position: relative; /* Ensure proper positioning for the tooltip */
+    overflow: visible; /* Allow the tooltip to be visible */
+}
+
+.card-header h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.card-body {
+    padding: 16px;
+}
+
+.search-container {
+    margin-bottom: 16px;
+}
+
+.search-input {
+    position: relative;
+}
+
+.search-input i {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: #888;
+}
+
+.search-input input {
+    width: 100%;
+    padding: 8px 12px 8px 32px;
+    border: 1px solid #444;
+    border-radius: 4px;
+    background-color: #111;
+    color: #fff;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #fff;
+}
+
+.data-table th, .data-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #444;
+}
+
+.data-table tr:hover {
+    background-color: #333;
+}
+
+.data-table th {
+    background-color: #333;
+    font-weight: bold;
+}
+
+th {
+    cursor: pointer;
+    user-select: none; /* Prevent text selection when clicking */
+}
+
+th:hover {
+    color: #007bff; /* Change color on hover */
+    text-decoration: underline; /* Add underline on hover */
+}
+
+/* Confidence Levels */
+.bg-green-500-20 {
+    background-color: rgba(34, 197, 94, 0.2); /* Light green */
+}
+.text-green-300 {
+    color: rgb(74, 222, 128); /* Green text */
+}
+
+.bg-yellow-500-20 {
+    background-color: rgba(234, 179, 8, 0.2); /* Light yellow */
+}
+.text-yellow-300 {
+    color: rgb(250, 204, 21); /* Yellow text */
+}
+
+.bg-red-500-20 {
+    background-color: rgba(239, 68, 68, 0.2); /* Light red */
+}
+.text-red-300 {
+    color: rgb(248, 113, 113); /* Red text */
+}
+
+/* Package Theft */
+.text-red-400 {
+    color: rgb(239, 68, 68); /* Red text for theft */
+}
+.text-green-400 {
+    color: rgb(34, 197, 94); /* Green text for no theft */
+}
+
+.statistics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns */
+    gap: 1rem; /* Space between items */
+}
+
+.stat-item {
+    background-color: #1f2937; /* Dark background for each stat item */
+    padding: 1rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    color: #fff; /* Text color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional shadow for better look */
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #9ca3af; /* Lighter text for labels */
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 0.5rem;
+}
+
+.info-icon-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.info-icon {
+    color: #007bff; /* Blue color for the icon */
+    font-size: 1.2rem;
+}
+
+.info-icon:hover {
+    color: #0056b3; /* Darker blue on hover */
+}
+
+.tooltip {
+    visibility: hidden;
+    width: 250px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 10px;
+    position: absolute;
+    z-index: 9999; /* Ensure it appears above other elements */
+    bottom: -125%; /* Position above the icon */
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.9rem;
+    white-space: normal; /* Ensure text wraps properly */
+}
+
+.info-icon-container:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+.title-with-tooltip {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between the title and the tooltip */
+}
+
+/* Ensure parent containers do not clip the tooltip */
+.graph-container {
+    position: relative; /* Ensure proper positioning for the tooltip */
+    overflow: visible; /* Allow the tooltip to be visible */
+}
+
+.card-actions {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #0069d9;
+}
+
+/* Date range form styles */
+.report-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.date-range-container {
+    display: flex;
+    gap: 1rem;
+}
+
+.form-group {
+    flex: 1;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.375rem;
+}
+
+.report-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+@media (max-width: 768px) {
+    .date-range-container {
+        flex-direction: column;
+    }
+    
+    .report-actions {
+        flex-direction: column;
+    }
+}
