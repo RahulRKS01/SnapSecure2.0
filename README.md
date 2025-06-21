@@ -54,12 +54,18 @@ git clone https://github.com/RahulRKS01/SnapSecure2.0.git
 cd snapsecure
 ```
 
-2. Install dependencies:
+2. Create Virtual Environment:
 ```bash
+python -m venv venv
+```
+
+3. Install dependencies:
+```bash
+
 pip install -r requirements.txt
 ```
 
-3. Set up environment variables:
+4. Set up environment variables:
 ```bash
 # Create a .env file with the following variables
 # Flask secret key
@@ -84,7 +90,7 @@ MAIL_PASSWORD=your_email_password
 MAIL_DEFAULT_SENDER=your_email@example.com
 ```
 
-4. Run the application:
+5. Run the application:
 ```bash
 flask run
 ```
