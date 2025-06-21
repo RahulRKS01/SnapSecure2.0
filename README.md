@@ -62,11 +62,26 @@ pip install -r requirements.txt
 3. Set up environment variables:
 ```bash
 # Create a .env file with the following variables
-MONGO_URI=your_mongodb_connection_string
-SECRET_KEY=your_secret_key
-API_URL=https://serverless.roboflow.com
-API_KEY=your_roboflow_api_key
-MODEL_ID=package-and-label-detection-agjvl/4
+# Flask secret key
+FLASK_SECRET_KEY=your_secret_key_here
+
+# MongoDB credentials
+MONGO_USERNAME=your_mongodb_username
+MONGO_PASSWORD=your_mongodb_password
+MONGO_URI=your_mongodb_uri
+
+# Roboflow API configuration
+ROBOFLOW_API_URL=https://serverless.roboflow.com
+ROBOFLOW_API_KEY=your_roboflow_api_key
+ROBOFLOW_MODEL_ID=your_model_id
+
+# Flask-Mail configuration
+MAIL_SERVER=smtp.example.com
+MAIL_PORT=587
+MAIL_USE_TLS=True
+MAIL_USERNAME=your_email@example.com
+MAIL_PASSWORD=your_email_password
+MAIL_DEFAULT_SENDER=your_email@example.com
 ```
 
 4. Run the application:
