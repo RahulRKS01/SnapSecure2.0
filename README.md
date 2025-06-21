@@ -122,17 +122,13 @@ The application will be available at http://localhost:5000
 - Navigate to the registration page from the home screen
 - Enter your email address, create a strong password, and confirm your password
 - Submit the form to create your account
-- Check your email for a verification link (if enabled)
-
+  
 #### Login:
 - Enter your registered email and password
-- Enable "Remember Me" for persistent login (optional)
-- Use the "Forgot Password" link if needed
 
 #### Profile Management:
 - Access your profile from the user menu in the top-right corner
 - Update personal information (name, contact details)
-- Change your password (requires current password verification)
 - Set notification preferences
 
 ### Dashboard Navigation
@@ -150,12 +146,6 @@ The dashboard is your central control center, featuring:
 - Archive (detection history)
 - Reports (analytics)
 - Settings
-- Help & Support
-
-#### Status Bar:
-- Connection status indicators
-- Current video source
-- Quick settings toggle
 
 ### Configuring Video Sources
 
@@ -166,8 +156,7 @@ The dashboard is your central control center, featuring:
 
 ##### Camera: Use built-in webcam or connected cameras
 - Select from the dropdown list of available devices
-- Adjust resolution and frame rate if needed
-- Test the connection before saving
+- Save the camera source before switching back to dashboard
 
 ##### IP Camera:
 - Enter the RTSP/HTTP URL (e.g., `rtsp://username:password@camera_ip:port/stream`)
@@ -184,15 +173,6 @@ The dashboard is your central control center, featuring:
 - Click "Upload" and wait for processing confirmation
 - The system will analyze the uploaded video as if it were a live stream
 
-##### Stream URL:
-- Enter public stream URLs for testing
-- Ensure you have proper rights to access the stream
-
-#### Video Configuration:
-- Adjust frame rate for optimal performance
-- Set resolution based on your network capabilities
-- Configure buffer settings for smoother playback
-
 ### Setting Up Regions of Interest (ROI)
 
 #### Access ROI Editor:
@@ -203,21 +183,13 @@ The dashboard is your central control center, featuring:
 - The video feed will freeze to allow you to draw
 - Click on the video to place points forming a polygon
 - Continue clicking to add more points
-- Click near the first point to close the polygon
+- Double click upon placing the last point to complete the polygon
 - Multiple ROIs can be created for different areas
 
 #### Editing ROI Areas:
 - Click on an existing ROI to select it
-- Drag points to adjust the shape
-- Right-click on a point to delete it
-- Double-click on a line to add a new point
-
-#### ROI Options:
-- Name each ROI for easier identification
-- Set sensitivity levels per ROI (High/Medium/Low)
-- Toggle individual ROIs on/off without deleting them
-- Set color coding for different types of areas
-
+- Select the "Delete ROI" option to delete the selected Polygon
+  
 #### Saving ROI Configuration:
 - Click "Save ROIs" to confirm your changes
 - The system will immediately begin using the new ROI settings
@@ -228,17 +200,8 @@ The dashboard is your central control center, featuring:
 - The dashboard displays active monitoring status
 - Detection boxes appear around identified objects
 - Object labels and confidence scores are displayed
-- Color-coded alerts indicate different detection types:
-  - Green: Package detected
-  - Yellow: Person near package
-  - Red: Potential theft in progress
 
 #### Alert Notifications:
-
-##### In-App Alerts:
-- Immediate pop-up notifications for critical events
-- Alert counter in the navigation bar
-- Sound alerts (can be toggled on/off)
 
 ##### Email Notifications:
 - Instant emails for critical alerts include:
@@ -246,18 +209,10 @@ The dashboard is your central control center, featuring:
   - Detection type (package, person, potential theft)
   - Confidence level
   - Screenshot of the event
-  - Link to view the full alert in the web interface
-
-##### Notification Settings:
-- Configure notification thresholds
-- Set quiet hours
-- Choose which events trigger notifications
 
 #### Alert Response:
 - Click on an alert to view details
-- Watch the video clip of the detected event
-- Mark alerts as "Reviewed" or "False Positive"
-- Add notes to alerts for future reference
+- Mark alerts as "Safe" or "Package Theft"
 
 ### Managing Detection Archive
 
@@ -267,31 +222,22 @@ The dashboard is your central control center, featuring:
 
 #### Filtering and Sorting:
 - Filter by date range using the calendar picker
-- Filter by detection type (package, person, theft)
-- Filter by confidence level (slider)
-- Sort by time, type, or verification status
+- Sort by time or time
 
 #### Detection Details:
 - Click on any detection to view detailed information
-- View the detection video clip (10 seconds before and after)
 - See metadata including:
   - Timestamp
   - Object type
   - Confidence score
   - ROI zone where detected
-  - Device that captured the footage
 
 #### Verification Actions:
 - Mark detections as:
   - Verified Safe (legitimate delivery or household member)
   - Verified Theft (confirmed package theft)
-  - False Positive (incorrect detection)
-- Add notes to provide context
-- Flag important events for follow-up
 
 #### Export Options:
-- Download detection clips as MP4 files
-- Export detection data as CSV
 - Generate printable reports for law enforcement
 
 ### Analytics and Reporting
@@ -299,7 +245,7 @@ The dashboard is your central control center, featuring:
 #### Accessing Reports:
 - Navigate to the Reports section from the sidebar
 
-#### Dashboard Analytics:
+#### Reports Analytics:
 - View detection statistics for selected time periods
 - Interactive charts showing:
   - Detection frequency by day/week/month
@@ -309,37 +255,9 @@ The dashboard is your central control center, featuring:
 
 #### Custom Reports:
 - Create reports for specific date ranges
-- Filter by detection types
-- Include or exclude specific ROIs
-- Add custom notes and observations
 
 #### Exporting Reports:
 - Download reports as PDF
-- Export raw data as CSV/Excel
-- Share reports via email
-
-### System Settings and Optimization
-
-#### Performance Settings:
-- Adjust processing resolution to balance accuracy vs. CPU usage
-- Configure frame rate for analysis
-- Set detection sensitivity thresholds
-- Enable/disable features based on your hardware capabilities
-
-#### Detection Settings:
-- Set minimum confidence threshold for alerts (default: 60%)
-- Configure object persistence time (how long an object must be present)
-- Adjust theft detection parameters (time thresholds)
-
-#### Storage Management:
-- Set video retention period
-- Configure automatic cleanup of old detections
-- View storage usage statistics
-
-#### Network Settings:
-- Configure bandwidth limits
-- Set up proxy settings if needed
-- Test connection to Roboflow API
 
 ### Troubleshooting Guide
 
