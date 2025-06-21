@@ -253,3 +253,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ---
 
 **Note**: SnapSecure is designed for personal use and should be deployed responsibly, respecting privacy laws and regulations in your jurisdiction.
+**Contact**: Please do contact me at 82102@siswa.unimas.my or jaszrks@gmail.com to obtain more details on how to run the system.
