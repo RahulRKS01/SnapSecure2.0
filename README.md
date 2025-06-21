@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-SnapSecure is a comprehensive AI-powered security system designed to detect and monitor package deliveries and potential theft incidents. The system uses computer vision, machine learning, and real-time monitoring to provide homeowners with an advanced solution to protect their delivered packages.
+SnapSecure is a comprehensive AI-powered security system designed to detect and monitor package deliveries and potential theft incidents. The system uses computer vision, and real-time monitoring to provide homeowners with an advanced solution to protect their delivered packages.
 
 ## Features
 
